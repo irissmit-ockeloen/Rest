@@ -1,15 +1,14 @@
 package About_me;
 
 import jakarta.persistence.*;
-
 import java.util.Objects;
+import jakarta.persistence.Entity;
 
 @Entity
 public class About_me {
     @Id
     @GeneratedValue()
     private Long id;
-
     private String title;
     private String function;
     private String description;
@@ -63,8 +62,7 @@ public class About_me {
             return false;
         About_me employee = (About_me) o;
         return
-                //Objects.equals(this.id, employee.id) &&
-                        Objects.equals(this.title, employee.title)
+                Objects.equals(this.id, employee.id) && Objects.equals(this.title, employee.title)
                 && Objects.equals(this.function, employee.function) && Objects.equals(this.description, employee.description);
     }
 

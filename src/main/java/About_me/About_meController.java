@@ -3,6 +3,7 @@ package About_me;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@RestController
 public class About_meController {
     private About_meRepository repository;
 
