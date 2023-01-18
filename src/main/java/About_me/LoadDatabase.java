@@ -17,6 +17,9 @@ class LoadDatabase {
         return args -> {
             log.info("Preloading " + repository.save(new About_me("Java developer English", "Java developer","As a java developer Deniz was responsible for creating the Java backend for the CV app.")));
             log.info("Preloading " + repository.save(new About_me("Java developer Dutch", "Java developer","As a java developer James was responsible for creating the Java backend for the CV app.")));
+            log.info("Preloading " + repository.save(new About_me("Java developer Dutch", "Java developer","As a java developer Iris was responsible for creating the Java backend for the CV app.")));
+
+
 
 
 
