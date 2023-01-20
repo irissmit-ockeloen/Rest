@@ -37,10 +37,7 @@ public class ProfileController {
 
                     return repository.save(profile);
                 })
-                .orElseGet(() -> {
-                    newProfile.setId(id);
-                    return repository.save(newProfile);
-                });
+                .orElseThrow(() -> new ProfileNotFoundException(id));
     }
 
     @DeleteMapping("/profiles/{id}")
