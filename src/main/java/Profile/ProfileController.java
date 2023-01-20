@@ -31,9 +31,9 @@ public class ProfileController {
     Object putProfile(@RequestBody Profile newProfile, @PathVariable Long id) {
         return repository.findById(id)
                 .map(profile -> {
-                    newProfile.setTitle(newProfile.getTitle());
-                    newProfile.setFunction(newProfile.getFunction());
-                    newProfile.setDescription(newProfile.getDescription());
+                    profile.setTitle(newProfile.getTitle());
+                    profile.setFunction(newProfile.getFunction());
+                    profile.setDescription(newProfile.getDescription());
 
                     return repository.save(profile);
                 })
