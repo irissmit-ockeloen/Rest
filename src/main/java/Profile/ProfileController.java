@@ -3,6 +3,8 @@ package Profile;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+import static Profile.Profile.*;
+
 @RestController
 public class ProfileController {
     private ProfileRepository repository;
