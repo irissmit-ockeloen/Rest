@@ -1,11 +1,12 @@
-package About_me;
+package Profile;
 
 import jakarta.persistence.*;
 import java.util.Objects;
 import jakarta.persistence.Entity;
 
 @Entity
-public class About_me {
+class Profile {
+
     @Id
     @GeneratedValue()
     private Long id;
@@ -13,21 +14,21 @@ public class About_me {
     private String function;
     private String description;
 
+    Profile() {
+    }
+
+    Profile(String title, String function, String description) {
+        this.title = title;
+        this.function = function;
+        this.description = description;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    About_me() {
-    }
-    About_me (String title, String function, String description) {
-
-        this.title = title;
-        this.function = function;
-        this.description = description;
     }
 
     public String getTitle() {
@@ -53,31 +54,30 @@ public class About_me {
     public void setDescription(String description) {
         this.description = description;
     }
+
     @Override
     public boolean equals(Object o) {
 
         if (this == o)
             return true;
-        if (!(o instanceof About_me))
+        if (!(o instanceof Profile))
             return false;
-        About_me employee = (About_me) o;
+        Profile profile = (Profile) o;
         return
-                Objects.equals(this.id, employee.id) && Objects.equals(this.title, employee.title)
-                && Objects.equals(this.function, employee.function) && Objects.equals(this.description, employee.description);
+                Objects.equals(this.id, profile.id) && Objects.equals(this.title, profile.title)
+                && Objects.equals(this.function, profile.function) && Objects.equals(this.description, profile.description);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                //this.id,
-                this.title, this.function, this.description);
+                this.id, this.title, this.function, this.description);
     }
 
     @Override
     public String toString() {
-        return "Employee{" +
-                //"id=" + this.id +
-                ", title='" + this.title + '\'' + ", function='" + this.function + '\'' + "description=" + this.description + '\'' + '}';
+        return "Profile{" +
+                "id=" + this.id + ", title=" + this.title + '\'' + ", function=" + this.function + '\'' + "description=" + this.description + '\'' + '}';
     }
 }
 

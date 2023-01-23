@@ -1,12 +1,12 @@
-package About_me;
+package Profile;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class About_meApplication {
+public class ProfileApplication {
     public static void main(String... args) {
-        SpringApplication.run(About_meApplication.class, args);
+        SpringApplication.run(ProfileApplication.class, args);
     }
 }
 
