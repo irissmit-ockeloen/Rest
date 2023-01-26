@@ -1,6 +1,7 @@
 package Profile;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,11 +23,10 @@ public class ProfileControllerTest {
 
     Profile RECORD_1 = new Profile("Teacher ", "English", "England");
     Profile RECORD_2 = new Profile("Java developer", "Dutch", "America");
-    Profile RECORD_3 = new Profile("Business Analyst", "Dutch", "Ukraine");
 
     @Test
     void getProfilesShouldReturnAllProfiles() {
-        List<Profile> expected = List.of(RECORD_1, RECORD_2, RECORD_3);
+        List<Profile> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
         List<Profile> actual = subject.getProfiles();
