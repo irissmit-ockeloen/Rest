@@ -1,9 +1,9 @@
 package Profile;
 
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
-import static Profile.Profile.*;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProfileController {
@@ -19,27 +19,32 @@ public class ProfileController {
     }
 
     @PostMapping("/profiles")
-    Object postProfile(@RequestBody Profile newProfile) {
+    Profile postProfile(@RequestBody Profile newProfile) {
         return repository.save(newProfile);
     }
 
     @GetMapping("/profiles/{id}")
-    Object getProfile(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException(id));
+    Profile getProfile(@PathVariable Long id) {
+        return repository.findById(id).orElseThrow(() -> new ProfileNotFoundException(id));
     }
 
     @PutMapping("/profiles/{id}")
-    Object putProfile(@RequestBody Profile newProfile, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(profile -> {
-                    profile.setTitle(newProfile.getTitle());
-                    profile.setFunction(newProfile.getFunction());
-                    profile.setDescription(newProfile.getDescription());
+    Profile putProfile(@RequestBody Profile newProfile, @PathVariable Long id) {
+        Optional<Profile> result = repository.findById(id);
+        if (result.isPresent()) {
+            return result.map(profile -> {
+                        profile.setTitle(newProfile.getTitle());
+                        profile.setFunction(newProfile.getFunction());
+                        profile.setDescription(newProfile.getDescription());
 
-                    return repository.save(profile);
-                })
-                .orElseThrow(() -> new ProfileNotFoundException(id));
+                        return repository.save(profile);
+                    })
+                    .orElseGet(() -> {
+                        newProfile.setId(id);
+                        return repository.save(newProfile);
+                    });
+        }
+        throw new ProfileNotFoundException(id);
     }
 
     @DeleteMapping("/profiles/{id}")
