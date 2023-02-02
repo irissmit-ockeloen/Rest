@@ -1,4 +1,4 @@
-package Profile;
+package fesma.nl.Profile;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
