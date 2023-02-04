@@ -1,4 +1,4 @@
-package fesma.nl.Payroll;
+package Profile;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,14 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-class PayrollApplicationTest {
+class ProfileApplicationTest {
 
-	@Autowired
-	PayrollApplication subject;
+    @Autowired
+    ProfileApplication subject;
 
-	@Test
-	void smokeTest() {
-		assertNotNull(subject);
-	}
+    @Test
+    void smokeTest() {
+        assertNotNull(subject);
+    }
 
 }
