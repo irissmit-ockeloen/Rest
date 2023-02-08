@@ -1,4 +1,4 @@
-package Profile;
+package fesma.nl.Profile;
 
 import jakarta.persistence.*;
 import java.util.Objects;

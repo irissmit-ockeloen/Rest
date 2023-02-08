@@ -1,4 +1,4 @@
-package Profile;
+package fesma.nl.Profile;
 
 import org.springframework.web.bind.annotation.*;
 

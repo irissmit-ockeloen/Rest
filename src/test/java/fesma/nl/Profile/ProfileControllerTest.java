@@ -1,4 +1,4 @@
-package Profile;
+package fesma.nl.Profile;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

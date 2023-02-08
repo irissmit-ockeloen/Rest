@@ -1,4 +1,4 @@
-package Profile;
+package fesma.nl.Profile;
 
 class ProfileNotFoundException extends RuntimeException {
      ProfileNotFoundException(Long id) {
