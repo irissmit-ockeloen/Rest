@@ -1,15 +1,10 @@
 package fesma.nl.Profile;
 
-import jakarta.persistence.*;
 import java.util.Objects;
-import jakarta.persistence.Entity;
 
-@Entity
 class Profile {
 
-    @Id
-    @GeneratedValue()
-    private Long id;
+    private String id;
     private String title;
     private String function;
     private String description;
@@ -23,11 +18,11 @@ class Profile {
         this.description = description;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
