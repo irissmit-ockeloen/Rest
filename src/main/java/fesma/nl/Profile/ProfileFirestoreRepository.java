@@ -47,9 +47,15 @@ public class ProfileFirestoreRepository {
 
     public Profile save(Profile profile) {
         try {
-            CollectionReference collectionReference = db.collection("profiles");
             Map<String, Object> data = fromProfile(profile);
-            collectionReference.add(data);
+            if (profile.getId() == null) {
+                CollectionReference collectionReference = db.collection("profiles");
+                collectionReference.add(data);
+            }
+            else {
+                DocumentReference collectionReference = db.collection("profiles").document(profile.getId());
+                collectionReference.set(data);
+            }
             return profile;
         } catch (Exception e) {
             throw new RuntimeException();
