@@ -29,10 +29,10 @@ public class ProfileController {
     }
 
     @PutMapping("/profiles/{id}")
-    Profile putProfile(@RequestBody Profile newProfile, @PathVariable String id) {
+    void putProfile(@RequestBody Profile newProfile, @PathVariable String id) {
         Optional<Profile> result = repository.findById(id);
         if (result.isPresent()) {
-            return result.map(profile -> {
+            result.map(profile -> {
                         profile.setTitle(newProfile.getTitle());
                         profile.setFunction(newProfile.getFunction());
                         profile.setDescription(newProfile.getDescription());
@@ -43,6 +43,7 @@ public class ProfileController {
                         newProfile.setId(id);
                         return repository.save(newProfile);
                     });
+            return;
         }
         throw new ProfileNotFoundException(id);
     }

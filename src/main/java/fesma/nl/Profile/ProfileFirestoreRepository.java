@@ -6,7 +6,6 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import org.springframework.context.annotation.Bean;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,14 +15,8 @@ import java.util.concurrent.ExecutionException;
 public class ProfileFirestoreRepository {
     private Firestore db;
 
-    public ProfileFirestoreRepository() throws IOException {
-        FileInputStream serviceAccount =
-                new FileInputStream("C:\\Users\\DenizvanIerselFesma\\profile-1c1bc-firebase-adminsdk-rtg1z-6b1530fe7f.json");
-
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-        FirebaseApp.initializeApp(options);
+    public ProfileFirestoreRepository() {
+        FirebaseApp.initializeApp();
         db = FirestoreClient.getFirestore();
     }
 
@@ -47,15 +40,9 @@ public class ProfileFirestoreRepository {
 
     public Profile save(Profile profile) {
         try {
+            CollectionReference collectionReference = db.collection("profiles");
             Map<String, Object> data = fromProfile(profile);
-            if (profile.getId() == null) {
-                CollectionReference collectionReference = db.collection("profiles");
-                collectionReference.add(data);
-            }
-            else {
-                DocumentReference collectionReference = db.collection("profiles").document(profile.getId());
-                collectionReference.set(data);
-            }
+            collectionReference.add(data);
             return profile;
         } catch (Exception e) {
             throw new RuntimeException();
@@ -65,7 +52,11 @@ public class ProfileFirestoreRepository {
     public Optional<Profile> findById(String id) {
         try {
             DocumentSnapshot data = db.collection("profiles").document(id).get().get();
-            return Optional.of(toProfile(data));
+            if (data.exists()) {
+                return Optional.of(toProfile(data));
+            } else {
+                return Optional.empty();
+            }
         } catch (InterruptedException | ExecutionException e) {
             return Optional.empty();
         }
@@ -74,6 +65,7 @@ public class ProfileFirestoreRepository {
     public void deleteById(String id) {
         db.collection("profiles").document(id).delete();
     }
+
     private Profile toProfile(DocumentSnapshot document) {
         Profile profile = new Profile(document.getString("title"), document.getString("function"), document.getString("description"));
         profile.setId(document.getId());
@@ -88,4 +80,3 @@ public class ProfileFirestoreRepository {
         return result;
     }
 }
-

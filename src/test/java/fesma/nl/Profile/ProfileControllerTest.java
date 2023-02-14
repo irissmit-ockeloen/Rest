@@ -1,6 +1,7 @@
 package fesma.nl.Profile;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -60,7 +61,7 @@ public class ProfileControllerTest {
 
     @Test
     void putProfileShouldSaveNewProfileWhenProfileExist() {
-        when(mockRepository.findById(String.valueOf(1L))).thenReturn(Optional.of(RECORD_1));
+        OngoingStubbing<Optional<Profile>> thenReturn = when(mockRepository.findById(String.valueOf("1L"))).thenReturn(Optional.of(RECORD_1));
 
         subject.putProfile(RECORD_2, String.valueOf(1L));
 

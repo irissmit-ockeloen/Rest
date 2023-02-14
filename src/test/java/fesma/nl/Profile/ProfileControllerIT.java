@@ -2,6 +2,7 @@ package fesma.nl.Profile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,9 +28,10 @@ public class ProfileControllerIT {
     Supplier<String> HOST = () -> String.format("http://localhost:%s/profiles", port);
     HttpHeaders HEADERS = new HttpHeaders();
 
+    String NON_EXISTING = "non-existing";
+
     Profile RECORD_1 = new Profile("Teacher ", "English", "England");
     Profile RECORD_2 = new Profile("Java developer", "Dutch", "America");
-
     @Test
     public void testGetAllProfilesShouldReturn200() {
         ResponseEntity<String> response = restTemplate.getForEntity(HOST.get(), String.class);
@@ -75,7 +77,7 @@ public class ProfileControllerIT {
     @Test
     public void testGetNonExistingProfileShouldReturn404() {
         ResponseEntity<String> responseEntity = restTemplate
-                .getForEntity(HOST.get() + "/99", String.class);
+                .getForEntity(HOST.get() + "/" + NON_EXISTING, String.class);
 
         assertEquals(404, responseEntity.getStatusCode().value());
     }
