@@ -2,7 +2,6 @@ package fesma.nl.Profile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +12,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = ProfileApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProfileControllerIT {
@@ -47,6 +47,11 @@ public class ProfileControllerIT {
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
+    String postProfile(Profile profile) {
+        Profile actual = restTemplate
+                .postForObject(HOST.get(), profile, Profile.class);
+        return actual.getId();
+    }
 
     @Test
     @DirtiesContext
@@ -67,9 +72,12 @@ public class ProfileControllerIT {
     }
 
     @Test
+    @DirtiesContext
     public void testGetProfileShouldReturn200() {
+        String idExisting = postProfile(RECORD_1);
+
         ResponseEntity<String> responseEntity = restTemplate
-                .getForEntity(HOST.get() + "/1", String.class);
+                .getForEntity(HOST.get() + "/" + idExisting, String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }

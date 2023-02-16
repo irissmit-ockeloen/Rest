@@ -1,19 +1,15 @@
 package fesma.nl.Profile;
 
 import com.google.api.core.ApiFuture;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class ProfileFirestoreRepository {
-    private Firestore db;
+    private final Firestore db;
 
     public ProfileFirestoreRepository() {
         FirebaseApp.initializeApp();
@@ -40,9 +36,15 @@ public class ProfileFirestoreRepository {
 
     public Profile save(Profile profile) {
         try {
-            CollectionReference collectionReference = db.collection("profiles");
             Map<String, Object> data = fromProfile(profile);
-            collectionReference.add(data);
+            if (profile.getId() == null) {
+                CollectionReference collectionReference = db.collection("profiles");
+                ApiFuture<DocumentReference> documentReference = collectionReference.add(data);
+                profile.setId(documentReference.get().getId());
+            } else {
+                DocumentReference collectionReference = db.collection("profiles").document(profile.getId());
+                collectionReference.set(data);
+            }
             return profile;
         } catch (Exception e) {
             throw new RuntimeException();

@@ -29,7 +29,7 @@ public class ProfileController {
     }
 
     @PutMapping("/profiles/{id}")
-    void putProfile(@RequestBody Profile newProfile, @PathVariable String id) {
+    Profile putProfile(@RequestBody Profile newProfile, @PathVariable String id) {
         Optional<Profile> result = repository.findById(id);
         if (result.isPresent()) {
             result.map(profile -> {
@@ -43,7 +43,6 @@ public class ProfileController {
                         newProfile.setId(id);
                         return repository.save(newProfile);
                     });
-            return;
         }
         throw new ProfileNotFoundException(id);
     }
