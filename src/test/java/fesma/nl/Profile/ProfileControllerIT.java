@@ -87,7 +87,6 @@ public class ProfileControllerIT {
     }
 
     @Test
-    @DirtiesContext
     public void testPutProfileShouldReturn200() throws JsonProcessingException {
         String id = postProfile(RECORD_1);
 
