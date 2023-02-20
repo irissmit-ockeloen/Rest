@@ -62,7 +62,7 @@ public class ProfileControllerTest {
     void putProfileShouldSaveNewProfileWhenProfileExist() {
         when(mockRepository.findById("1L")).thenReturn(Optional.of(RECORD_1));
 
-        subject.putProfile(RECORD_2, " 1L");
+        subject.putProfile(RECORD_2, "1L");
 
         verify(mockRepository, times(1)).save(RECORD_2);
     }

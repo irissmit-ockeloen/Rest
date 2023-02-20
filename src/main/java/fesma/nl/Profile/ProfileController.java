@@ -51,5 +51,6 @@ public class ProfileController {
     void deleteProfile(@PathVariable String id) {
         repository.deleteById(id);
     }
+
 }
 

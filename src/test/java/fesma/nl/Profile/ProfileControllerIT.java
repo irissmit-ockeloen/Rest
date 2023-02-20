@@ -14,6 +14,8 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.PUT;
 
 @SpringBootTest(classes = ProfileApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProfileControllerIT {
@@ -32,6 +34,7 @@ public class ProfileControllerIT {
 
     Profile RECORD_1 = new Profile("Teacher ", "English", "England");
     Profile RECORD_2 = new Profile("Java developer", "Dutch", "America");
+
     @Test
     public void testGetAllProfilesShouldReturn200() {
         ResponseEntity<String> response = restTemplate.getForEntity(HOST.get(), String.class);
@@ -40,21 +43,14 @@ public class ProfileControllerIT {
     }
 
     @Test
-    @DirtiesContext
     public void testPostProfileShouldReturn200() {
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity(HOST.get(), RECORD_1, String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
-    String postProfile(Profile profile) {
-        Profile actual = restTemplate
-                .postForObject(HOST.get(), profile, Profile.class);
-        return actual.getId();
-    }
 
     @Test
-    @DirtiesContext
     public void testPostProfileShouldChangeData() {
         Profile actual = restTemplate
                 .postForObject(HOST.get(), RECORD_1, Profile.class);
@@ -72,15 +68,15 @@ public class ProfileControllerIT {
     }
 
     @Test
-    @DirtiesContext
     public void testGetProfileShouldReturn200() {
-        String idExisting = postProfile(RECORD_1);
+        String id = postProfile(RECORD_1);
 
         ResponseEntity<String> responseEntity = restTemplate
-                .getForEntity(HOST.get() + "/" + idExisting, String.class);
+                .getForEntity(HOST.get() + "/" + id, String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
+
 
     @Test
     public void testGetNonExistingProfileShouldReturn404() {
@@ -93,9 +89,11 @@ public class ProfileControllerIT {
     @Test
     @DirtiesContext
     public void testPutProfileShouldReturn200() throws JsonProcessingException {
+        String id = postProfile(RECORD_1);
+
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                HOST.get() + "/1",
-                HttpMethod.PUT, getHttpEntity(RECORD_1), String.class);
+                HOST.get() + "/" + id,
+                PUT, getHttpEntity(RECORD_1), String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
@@ -103,38 +101,49 @@ public class ProfileControllerIT {
     @Test
     public void testPutNonExistingProfileShouldReturn404() throws JsonProcessingException {
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                HOST.get() + "/99",
-                HttpMethod.PUT, getHttpEntity(RECORD_1), String.class);
+                HOST.get() + "/" + NON_EXISTING,
+                PUT, getHttpEntity(RECORD_1), String.class);
 
         assertEquals(404, responseEntity.getStatusCode().value());
     }
+
     @Test
-    @DirtiesContext
     public void testPutProfileShouldChangeData() throws JsonProcessingException {
+        String id = postProfile(RECORD_1);
+
         Profile actual = restTemplate.exchange(
-                HOST.get() + "/1",
+                HOST.get() + "/" + id,
                 HttpMethod.PUT, getHttpEntity(RECORD_2), Profile.class).getBody();
 
-        assertEquals(1, actual.getId());
+        assertNotNull(actual.getId());
         assertEquals(RECORD_2.getTitle(), actual.getTitle());
         assertEquals(RECORD_2.getFunction(), actual.getFunction());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
 
         actual = restTemplate
-                .getForObject(HOST.get() + "/1", Profile.class);
+                .getForObject(HOST.get() + "/" + actual.getId(), Profile.class);
         assertEquals(RECORD_2.getTitle(), actual.getTitle());
         assertEquals(RECORD_2.getFunction(), actual.getFunction());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
     }
 
     @Test
-    @DirtiesContext
     public void testDeleteProfileShouldReturn200() {
+        // PREPARE: Add a profile to get a id that we can delete
+        String id = postProfile(RECORD_1);
 
+        // ACT: Delete the profile
         ResponseEntity<String> responseEntity = restTemplate
-                .exchange(HOST.get() + "/1", HttpMethod.DELETE, getHttpEntity(), String.class);
+                .exchange(HOST.get() + "/" + id, DELETE, getHttpEntity(), String.class);
 
+        // CHECK: check the return code
         assertEquals(200, responseEntity.getStatusCode().value());
+    }
+
+    private String postProfile(Profile profile) {
+        Profile actual = restTemplate
+                .postForObject(HOST.get(), profile, Profile.class);
+        return actual.getId();
     }
 
     private HttpEntity<String> getHttpEntity(Object value) throws JsonProcessingException {
@@ -148,3 +157,4 @@ public class ProfileControllerIT {
         return new HttpEntity<>(HEADERS);
     }
 }
+
