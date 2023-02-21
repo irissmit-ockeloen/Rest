@@ -7,9 +7,9 @@ import java.util.Optional;
 
 @RestController
 public class ProfileController {
-    private ProfileRepository repository;
+    private ProfileFirestoreRepository repository;
 
-    ProfileController(ProfileRepository repository) {
+    ProfileController(ProfileFirestoreRepository repository) {
         this.repository = repository;
     }
 
@@ -24,12 +24,12 @@ public class ProfileController {
     }
 
     @GetMapping("/profiles/{id}")
-    Profile getProfile(@PathVariable Long id) {
+    Profile getProfile(@PathVariable String id) {
         return repository.findById(id).orElseThrow(() -> new ProfileNotFoundException(id));
     }
 
     @PutMapping("/profiles/{id}")
-    Profile putProfile(@RequestBody Profile newProfile, @PathVariable Long id) {
+    Profile putProfile(@RequestBody Profile newProfile, @PathVariable String id) {
         Optional<Profile> result = repository.findById(id);
         if (result.isPresent()) {
             return result.map(profile -> {
@@ -48,8 +48,9 @@ public class ProfileController {
     }
 
     @DeleteMapping("/profiles/{id}")
-    void deleteProfile(@PathVariable Long id) {
+    void deleteProfile(@PathVariable String id) {
         repository.deleteById(id);
     }
+
 }
 
