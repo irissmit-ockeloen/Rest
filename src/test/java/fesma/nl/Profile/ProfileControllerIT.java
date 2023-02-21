@@ -59,13 +59,13 @@ public class ProfileControllerIT {
         Profile actual = restTemplate
                 .postForObject(HOST.get(), RECORD_1, Profile.class);
 
-        // CHECK: if the returned Profile is equl to the posted profile and the EXISTING is set
+        // CHECK: if the returned Profile is equal to the posted profile and the id is set
         assertNotNull(actual.getId());
         assertEquals(RECORD_1.getTitle(), actual.getTitle());
         assertEquals(RECORD_1.getFunction(), actual.getFunction());
         assertEquals(RECORD_1.getDescription(), actual.getDescription());
 
-        // CHECK: is the database is updated using the get method
+        // CHECK: if the database is updated using the get method
         actual = restTemplate
                 .getForObject(HOST.get() + "/" + actual.getId(), Profile.class);
         assertEquals(RECORD_1.getTitle(), actual.getTitle());
@@ -75,7 +75,7 @@ public class ProfileControllerIT {
 
     @Test
     public void testGetProfileShouldReturn200() {
-        // PREPARE: Add a profile to get a EXISTING that we can get
+        // PREPARE: Add a profile to get an id that we can get
         String EXISTING = postProfile(RECORD_1);
         
         // ACT: Get the profile
@@ -99,7 +99,7 @@ public class ProfileControllerIT {
 
     @Test
     public void testPutProfileShouldReturn200() throws JsonProcessingException {
-        // PREPARE: Add a profile to PUT
+        // PREPARE: Add a profile to get an id that we can PUT
         String EXISTING = postProfile(RECORD_1);
 
         // ACT: Put the profile
@@ -124,15 +124,15 @@ public class ProfileControllerIT {
 
     @Test
     public void testPutProfileShouldChangeData() throws JsonProcessingException, InterruptedException {
-        // PREPARE: Add a profile to put
+        // PREPARE: Add a profile to get an id that we can put
         String EXISTING = postProfile(RECORD_1);
 
-        // ACT: Add an EXISTING
+        // ACT: Put the profile
         Profile actual = restTemplate.exchange(
                 HOST.get() + "/" + EXISTING,
                 HttpMethod.PUT, getHttpEntity(RECORD_2), Profile.class).getBody();
 
-        // CHECK: the returned Profile is equal to the input profile
+        // CHECK: if the returned Profile is equal to the put profile
         assertEquals(EXISTING, actual.getId());
         assertEquals(RECORD_2.getTitle(), actual.getTitle());
         assertEquals(RECORD_2.getFunction(), actual.getFunction());
