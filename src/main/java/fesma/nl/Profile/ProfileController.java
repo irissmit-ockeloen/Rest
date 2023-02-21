@@ -32,7 +32,7 @@ public class ProfileController {
     Profile putProfile(@RequestBody Profile newProfile, @PathVariable String id) {
         Optional<Profile> result = repository.findById(id);
         if (result.isPresent()) {
-            result.map(profile -> {
+            return result.map(profile -> {
                         profile.setTitle(newProfile.getTitle());
                         profile.setFunction(newProfile.getFunction());
                         profile.setDescription(newProfile.getDescription());

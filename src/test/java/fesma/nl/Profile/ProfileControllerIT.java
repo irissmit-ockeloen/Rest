@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.function.Supplier;
 
@@ -37,21 +36,26 @@ public class ProfileControllerIT {
 
     @Test
     public void testGetAllProfilesShouldReturn200() {
+        // ACT: GET all profiles
         ResponseEntity<String> response = restTemplate.getForEntity(HOST.get(), String.class);
 
+        // CHECK: check the return code
         assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
     public void testPostProfileShouldReturn200() {
+        // ACT: POST a profile
         ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity(HOST.get(), RECORD_1, String.class);
 
+        // CHECK: check the return code
         assertEquals(200, responseEntity.getStatusCode().value());
     }
 
     @Test
     public void testPostProfileShouldChangeData() {
+        // PREPARE: Post a profile  and change data with exchange() method
         Profile actual = restTemplate
                 .postForObject(HOST.get(), RECORD_1, Profile.class);
 
@@ -60,6 +64,7 @@ public class ProfileControllerIT {
         assertEquals(RECORD_1.getFunction(), actual.getFunction());
         assertEquals(RECORD_1.getDescription(), actual.getDescription());
 
+        // CHECK: Return resource and use get method
         actual = restTemplate
                 .getForObject(HOST.get() + "/" + actual.getId(), Profile.class);
         assertEquals(RECORD_1.getTitle(), actual.getTitle());
@@ -69,57 +74,71 @@ public class ProfileControllerIT {
 
     @Test
     public void testGetProfileShouldReturn200() {
+        // PREPARE: Add a profile to get a id that we can get
         String id = postProfile(RECORD_1);
-
+        // ACT: Get the profile
         ResponseEntity<String> responseEntity = restTemplate
                 .getForEntity(HOST.get() + "/" + id, String.class);
-
+        // CHECK: check the return code
         assertEquals(200, responseEntity.getStatusCode().value());
     }
 
 
     @Test
     public void testGetNonExistingProfileShouldReturn404() {
+        // ACT: Get the profile, Add 'NON_EXISTING
         ResponseEntity<String> responseEntity = restTemplate
                 .getForEntity(HOST.get() + "/" + NON_EXISTING, String.class);
 
+        // CHECK: check the return code
         assertEquals(404, responseEntity.getStatusCode().value());
     }
 
     @Test
-    @DirtiesContext
     public void testPutProfileShouldReturn200() throws JsonProcessingException {
+        // PREPARE: Add a profile to PUT id that we can put
         String id = postProfile(RECORD_1);
 
+        // ACT: Put the profile
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 HOST.get() + "/" + id,
                 PUT, getHttpEntity(RECORD_1), String.class);
 
+        // CHECK: check the return code
         assertEquals(200, responseEntity.getStatusCode().value());
+
     }
 
     @Test
     public void testPutNonExistingProfileShouldReturn404() throws JsonProcessingException {
+        // ACT: For return use "PUT" method it put the profile, add 'NON-EXISTING' if profile non-exist
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 HOST.get() + "/" + NON_EXISTING,
                 PUT, getHttpEntity(RECORD_1), String.class);
 
+        // CHECK: check the return code
         assertEquals(404, responseEntity.getStatusCode().value());
     }
 
     @Test
     public void testPutProfileShouldChangeData() throws JsonProcessingException {
+        // PREPARE: Add a profile to get id that we can put id
         String id = postProfile(RECORD_1);
 
+        // ACT: Add an id
+        // and delete "/1" ---> to this "/"
         Profile actual = restTemplate.exchange(
                 HOST.get() + "/" + id,
                 HttpMethod.PUT, getHttpEntity(RECORD_2), Profile.class).getBody();
 
+        // CHECK: assertNotNull Check that an object is not null
+        // assertEquals Check string with object
         assertNotNull(actual.getId());
         assertEquals(RECORD_2.getTitle(), actual.getTitle());
         assertEquals(RECORD_2.getFunction(), actual.getFunction());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
 
+        // Return resource and use get method
         actual = restTemplate
                 .getForObject(HOST.get() + "/" + actual.getId(), Profile.class);
         assertEquals(RECORD_2.getTitle(), actual.getTitle());
