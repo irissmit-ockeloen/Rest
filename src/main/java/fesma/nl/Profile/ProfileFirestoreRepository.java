@@ -17,17 +17,11 @@ public class ProfileFirestoreRepository {
     }
 
     public List<Profile> findAll() {
-        ApiFuture<QuerySnapshot> query = db.collection("profiles").get();
+        ApiFuture<QuerySnapshot> queryFuture = collection().get();
+        QuerySnapshot query = fromFuture(queryFuture);
+        List<QueryDocumentSnapshot> documents = query.getDocuments();
 
-        QuerySnapshot querySnapshot = null;
-        try {
-            querySnapshot = query.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-
-        List<Profile> result = new ArrayList<Profile>();
+        List<Profile> result = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             result.add(toProfile(document));
         }
@@ -35,41 +29,49 @@ public class ProfileFirestoreRepository {
     }
 
     public Profile save(Profile profile) {
-        try {
-            Map<String, Object> data = fromProfile(profile);
-            if (profile.getId() == null) {
-                CollectionReference collectionReference = db.collection("profiles");
-                ApiFuture<DocumentReference> documentReference = collectionReference.add(data);
-                profile.setId(documentReference.get().getId());
-            } else {
-                DocumentReference collectionReference = db.collection("profiles").document(profile.getId());
-                collectionReference.set(data);
-            }
-            return profile;
-        } catch (Exception e) {
-            throw new RuntimeException();
+        Map<String, Object> data = fromProfile(profile);
+        if (profile.getId() == null) {
+            ApiFuture<DocumentReference> documentFuture = collection().add(data);
+            DocumentReference document = fromFuture(documentFuture);
+            profile.setId(document.getId());
+        } else {
+            DocumentReference document = collection().document(profile.getId());
+            document.set(data);
         }
+        return profile;
     }
 
     public Optional<Profile> findById(String id) {
-        try {
-            DocumentSnapshot data = db.collection("profiles").document(id).get().get();
-            if (data.exists()) {
-                return Optional.of(toProfile(data));
-            } else {
-                return Optional.empty();
-            }
-        } catch (InterruptedException | ExecutionException e) {
+        ApiFuture<DocumentSnapshot> documentFuture = collection().document(id).get();
+        DocumentSnapshot snapshot = fromFuture(documentFuture);
+        if (snapshot.exists()) {
+            return Optional.of(toProfile(snapshot));
+        } else {
             return Optional.empty();
         }
     }
 
     public void deleteById(String id) {
-        db.collection("profiles").document(id).delete();
+        collection().document(id).delete();
+    }
+
+    private <T> T fromFuture(ApiFuture<T> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private CollectionReference collection() {
+        return db.collection("profiles");
     }
 
     private Profile toProfile(DocumentSnapshot document) {
-        Profile profile = new Profile(document.getString("title"), document.getString("function"), document.getString("description"));
+        Profile profile = new Profile(
+                document.getString("title"),
+                document.getString("function"),
+                document.getString("description"));
         profile.setId(document.getId());
         return profile;
     }
