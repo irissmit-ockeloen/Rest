@@ -20,7 +20,7 @@ class CompetenceControllerTest {
     @Autowired
     CompetenceController subject;
 
-    Long ID = 1L;
+    String ID = "1L";
 
     Competence RECORD_1 = new Competence("Python", "Developer");
     Competence RECORD_2 = new Competence("C++", "Developer");

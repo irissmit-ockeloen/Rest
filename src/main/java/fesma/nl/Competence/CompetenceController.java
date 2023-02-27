@@ -17,7 +17,7 @@ public class CompetenceController {
         return repository.findAll();
     }
     @GetMapping("/competence/{id}")
-    Competence getCompetencies(@PathVariable Long id) {
+    Competence getCompetencies(@PathVariable String id) {
         return repository.findById(id).orElseThrow(() -> new CompetenceNotFoundException(id));
     }
 
@@ -27,7 +27,7 @@ public class CompetenceController {
     }
 
     @PutMapping("/competence/{id}")
-    Competence putCompetencies(@RequestBody Competence newCompetence, @PathVariable Long id) {
+    Competence putCompetencies(@RequestBody Competence newCompetence, @PathVariable String id) {
         Optional<Competence> result = repository.findById(id);
         if (result.isPresent()) {
             return result.map(competencies -> {
@@ -44,7 +44,7 @@ public class CompetenceController {
         throw new CompetenceNotFoundException(id);
     }
     @DeleteMapping("/competence/{id}")
-    void deleteCompetencies(@PathVariable Long id){
+    void deleteCompetencies(@PathVariable String id){
         repository.deleteById(id);
     }
 }

@@ -5,17 +5,17 @@ import java.util.Objects;
 public class Competence {
     private String competence;
     private String description;
-    private Long id;
+    private String id;
 
     public Competence(String competence, String description) {
         this.competence = competence;
         this.description = description;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

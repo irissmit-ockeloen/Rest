@@ -1,7 +1,7 @@
 package fesma.nl.Competence;
 
 public class CompetenceNotFoundException extends RuntimeException {
-    CompetenceNotFoundException(Long id) {
+    CompetenceNotFoundException(String id) {
         super("Could not find competency " + id);
     }
 }
