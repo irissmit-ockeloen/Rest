@@ -1,4 +1,4 @@
-package fesma.nl.Competencies;
+package fesma.nl.Competence;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
     @Bean
-    public CompetenciesRepository repository() {
-        return new CompetenciesRepository();
+    public CompetenceRepository repository() {
+        return new CompetenceRepository();
     }
 }

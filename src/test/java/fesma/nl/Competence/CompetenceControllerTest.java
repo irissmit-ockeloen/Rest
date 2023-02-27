@@ -1,4 +1,4 @@
-package fesma.nl.Competencies;
+package fesma.nl.Competence;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +13,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class CompetenciesControllerTest {
+class CompetenceControllerTest {
     @MockBean
-    CompetenciesRepository mockRepository;
+    CompetenceRepository mockRepository;
 
     @Autowired
-    CompetenciesController subject;
+    CompetenceController subject;
 
     Long ID = 1L;
 
-    Competencies RECORD_1 = new Competencies("Python", "Developer");
-    Competencies RECORD_2 = new Competencies("C++", "Developer");
-    Competencies RECORD_3 = new Competencies("JavaScript", "Developer");
-    Competencies RECORD_4 = new Competencies("Ruby", "Developer");
+    Competence RECORD_1 = new Competence("Python", "Developer");
+    Competence RECORD_2 = new Competence("C++", "Developer");
+    Competence RECORD_3 = new Competence("JavaScript", "Developer");
+    Competence RECORD_4 = new Competence("Ruby", "Developer");
 
     @Test
     void getAllCompetenciesShouldReturnAllCompetencies() {
-        List<Competencies> expected = List.of(RECORD_1, RECORD_2, RECORD_3, RECORD_4);
+        List<Competence> expected = List.of(RECORD_1, RECORD_2, RECORD_3, RECORD_4);
         when(mockRepository.findAll()).thenReturn(expected);
 
-        List<Competencies> actual = subject.getAllCompetencies();
+        List<Competence> actual = subject.getAllCompetencies();
 
         assertEquals(expected, actual);
     }
@@ -57,11 +57,11 @@ class CompetenciesControllerTest {
     void getCompetenciesShouldThrowWhenCompetenciesDoesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenciesNotFoundException.class, () -> subject.getCompetencies(ID));
+        assertThrows(CompetenceNotFoundException.class, () -> subject.getCompetencies(ID));
     }
 
     @Test
-    void putCompetenciesShouldSavNewCompetenciesWheCompetenciesExist() throws CompetenciesNotFoundException {
+    void putCompetenciesShouldSavNewCompetenciesWheCompetenciesExist() throws CompetenceNotFoundException {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
         subject.putCompetencies(RECORD_2, ID);
@@ -73,7 +73,7 @@ class CompetenciesControllerTest {
     void putCompetenciesThrowWhenCompetenciesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenciesNotFoundException.class, () -> subject.putCompetencies(RECORD_2, ID));
+        assertThrows(CompetenceNotFoundException.class, () -> subject.putCompetencies(RECORD_2, ID));
     }
 
     @Test

@@ -1,12 +1,12 @@
-package fesma.nl.Competencies;
+package fesma.nl.Competence;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CompetenciesApplication {
+public class CompetenceApplication {
     public static void main(String... args) {
-        SpringApplication.run(CompetenciesApplication.class, args);
+        SpringApplication.run(CompetenceApplication.class, args);
     }
 }
 

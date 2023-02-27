@@ -1,4 +1,4 @@
-package fesma.nl.Competencies;
+package fesma.nl.Competence;
         ;
 
 import org.junit.jupiter.api.Test;
@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-class CompetenciesApplicationTest {
+class CompetenceApplicationTest {
 
     @Autowired
-    CompetenciesApplication subject;
+    CompetenceApplication subject;
 
     @Test
     void Test() {

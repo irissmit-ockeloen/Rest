@@ -1,19 +1,13 @@
-package fesma.nl.Competencies;
+package fesma.nl.Competence;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-public class Competencies {
+public class Competence {
     private String competence;
     private String description;
     private Long id;
 
-    public Competencies(String competence, String description) {
-    }
-
-    public Competencies(Long id, String competence, String description) {
-        this.id = id;
+    public Competence(String competence, String description) {
         this.competence = competence;
         this.description = description;
     }
@@ -47,11 +41,11 @@ public class Competencies {
 
         if (this == o)
             return true;
-        if (!(o instanceof Competencies competencies))
+        if (!(o instanceof Competence competence))
             return false;
         return
-                Objects.equals(this.id, competencies.id) && Objects.equals(this.competence, competencies.competence)
-                        && Objects.equals(this.description, competencies.description);
+                Objects.equals(this.id, competence.id) && Objects.equals(this.competence, competence.competence)
+                        && Objects.equals(this.description, competence.description);
     }
 
     @Override
@@ -62,22 +56,7 @@ public class Competencies {
 
     @Override
     public String toString() {
-        return "competencies.Competencies{" +
+        return "competencies.Competence{" +
                 "id=" + this.id + ", competence=" + this.competence + "description=" + this.description + '\'' + '}';
-    }
-
-    public List<Competencies> findAll() {
-        return null;
-    }
-
-    public Competencies save(Competencies newCompetencies) {
-        return newCompetencies;
-    }
-
-    public Optional<Competencies> findById(Long id) {
-        return Optional.empty();
-    }
-
-    public void deleteById(Long id) {
     }
 }
