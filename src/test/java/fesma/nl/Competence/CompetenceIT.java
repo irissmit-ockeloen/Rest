@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import java.util.function.Supplier;
 
@@ -32,23 +35,22 @@ public class CompetenceIT {
     String NON_EXISTING = "non-existing";
 
     Competence RECORD_1 = new Competence("JavaScript", "Developer");
-    Competence RECORD_2 = new Competence("C++", "Developer");
+    Competence RECORD_2 = new Competence( "C++", "Developer");
 
     @Test
     public void testGetAllCompetenceShouldReturn200() {
-        ResponseEntity<String> response = restTemplate.getForEntity(HOST.get(), String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(HOST.get(),  String.class);
 
         assertEquals(200, response.getStatusCode().value());
     }
 
     @Test
     public void testPostCompetenceShouldReturn200() {
-        ResponseEntity<String> responseEntity = restTemplate
+       ResponseEntity<String> responseEntity = restTemplate
                 .postForEntity(HOST.get(), RECORD_1, String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
-
     @Test
     public void testPostCompetenceShouldChangeData() {
         Competence actual = restTemplate
@@ -66,10 +68,10 @@ public class CompetenceIT {
 
     @Test
     public void testGetCompetenceShouldReturn200() {
-        String EXISTING = postCompetence(RECORD_1);
+        String id = postCompetence(RECORD_1);
 
         ResponseEntity<String> responseEntity = restTemplate
-                .getForEntity(HOST.get() + "/" + EXISTING, String.class);
+                .getForEntity(HOST.get() + "/" + id, String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
@@ -84,11 +86,11 @@ public class CompetenceIT {
 
     @Test
     public void testPutCompetenceShouldReturn200() throws JsonProcessingException {
-        String EXISTING = postCompetence(RECORD_1);
+        String id = postCompetence(RECORD_1);
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                HOST.get() + "/" + EXISTING,
-                PUT, getHttpEntity(this.RECORD_1), String.class);
+                HOST.get() + "/" + id,
+                PUT, getHttpEntity(RECORD_1), String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
@@ -104,7 +106,7 @@ public class CompetenceIT {
 
     @Test
     public void testPutCompetenceShouldChangeData() throws JsonProcessingException, InterruptedException {
-        String EXISTING = postCompetence(RECORD_1);
+        String EXISTING = postCompetence (RECORD_1);
 
         Competence actual = restTemplate.exchange(
                 HOST.get() + "/" + EXISTING,
@@ -123,10 +125,10 @@ public class CompetenceIT {
 
     @Test
     public void testDeleteCompetenceShouldReturn200() {
-        String EXISTING = postCompetence(RECORD_1);
+        String id = postCompetence(RECORD_1);
 
         ResponseEntity<String> responseEntity = restTemplate
-                .exchange(HOST.get() + "/" + EXISTING, DELETE, getHttpEntity(), String.class);
+                .exchange(HOST.get() + "/" + id, DELETE, getHttpEntity(), String.class);
 
         assertEquals(200, responseEntity.getStatusCode().value());
     }
@@ -136,7 +138,6 @@ public class CompetenceIT {
                 .postForObject(HOST.get(), competence, Competence.class);
         return actual.getId();
     }
-
     private HttpEntity<String> getHttpEntity(Object value) throws JsonProcessingException {
         HEADERS.setContentType(MediaType.APPLICATION_JSON);
         String requestBody = MAPPER.writeValueAsString(value);

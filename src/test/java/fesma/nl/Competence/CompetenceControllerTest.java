@@ -24,12 +24,10 @@ class CompetenceControllerTest {
 
     Competence RECORD_1 = new Competence("Python", "Developer");
     Competence RECORD_2 = new Competence("C++", "Developer");
-    Competence RECORD_3 = new Competence("JavaScript", "Developer");
-    Competence RECORD_4 = new Competence("Ruby", "Developer");
 
     @Test
     void getAllCompetenciesShouldReturnAllCompetencies() {
-        List<Competence> expected = List.of(RECORD_1, RECORD_2, RECORD_3, RECORD_4);
+        List<Competence> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
         List<Competence> actual = subject.getAllCompetencies();
@@ -57,14 +55,14 @@ class CompetenceControllerTest {
     void getCompetenciesShouldThrowWhenCompetenciesDoesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenceNotFoundException.class, () -> subject.getCompetencies(ID));
+        assertThrows(CompetenceNotFoundException.class, () -> subject.getCompetencies("1L"));
     }
 
     @Test
     void putCompetenciesShouldSavNewCompetenciesWheCompetenciesExist() throws CompetenceNotFoundException {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
-        subject.putCompetencies(RECORD_2, ID);
+        subject.putCompetencies(RECORD_2, "1L");
 
         verify(mockRepository, times(1)).save(RECORD_2);
     }
