@@ -23,7 +23,7 @@ public class CompetenceRepository {
 
         List<Competence> result = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            result.add(toComptence(document));
+            result.add(toCompetence(document));
         }
         return result;
     }
@@ -40,12 +40,11 @@ public class CompetenceRepository {
         }
         return competence;
     }
-
     public Optional<Competence> findById(String id) {
         ApiFuture<DocumentSnapshot> documentFuture = collection().document(id).get();
         DocumentSnapshot snapshot = fromFuture(documentFuture);
         if (snapshot.exists()) {
-            return Optional.of(toComptence(snapshot));
+            return Optional.of(toCompetence(snapshot));
         } else {
             return Optional.empty();
         }
@@ -67,21 +66,18 @@ public class CompetenceRepository {
         return db.collection("competencies");
     }
 
-    private Competence toComptence(DocumentSnapshot document) {
-        return null;
-//        Profile profile = new Profile(
-//                document.getString("title"),
-//                document.getString("function"),
-//                document.getString("description"));
-//        profile.setId(document.getId());
-//        return profile;
+    private Competence toCompetence(DocumentSnapshot document) {
+        Competence competence = new Competence();
+                document.getString("competence");
+                document.getString("description");
+       competence.setId(document.getId());
+        return competence;
     }
 
     private Map<String, Object> fromCompetence(Competence competence) {
         Map<String, Object> result = new HashMap<>();
-//        result.put("title", profile.getTitle());
-//        result.put("function", profile.getFunction());
-//        result.put("description", profile.getDescription());
+        result.put("competence", competence.getCompetence());
+        result.put("description", competence.getDescription());
         return result;
     }
 }

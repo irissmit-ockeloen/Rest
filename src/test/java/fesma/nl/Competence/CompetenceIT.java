@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.util.function.Supplier;
 
@@ -110,7 +107,7 @@ public class CompetenceIT {
 
         Competence actual = restTemplate.exchange(
                 HOST.get() + "/" + EXISTING,
-                PUT, getHttpEntity(RECORD_2), Competence.class).getBody();
+                HttpMethod.PUT, getHttpEntity(RECORD_2),Competence.class).getBody();
 
         assertEquals(EXISTING, actual.getId());
         assertEquals(RECORD_2.getCompetence(), actual.getCompetence());
@@ -118,7 +115,7 @@ public class CompetenceIT {
 
         Thread.sleep(200);
         actual = restTemplate
-                .getForObject(HOST.get() + "/" + EXISTING, Competence.class);
+                .getForObject(HOST.get() + "/"  + EXISTING, Competence.class);
         assertEquals(RECORD_2.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
     }

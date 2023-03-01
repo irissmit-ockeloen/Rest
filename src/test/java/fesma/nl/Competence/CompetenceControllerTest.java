@@ -30,20 +30,20 @@ class CompetenceControllerTest {
         List<Competence> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
-        List<Competence> actual = subject.getAllCompetencies();
+        List<Competence> actual = subject.getCompetencies();
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void postCompetenciesShouldSaveNewCompetenciesToRepository() {
-        subject.postCompetencies(RECORD_1);
+    void postCompetenceShouldSaveNewCompetenceToRepository() {
+        subject.postCompetence(RECORD_1);
 
         verify(mockRepository, times(1)).save(RECORD_1);
     }
 
     @Test
-    void getCompetenciesShouldReturnCompetenciesWhenCompetenciesExist() {
+    void getCompetenceShouldReturnCompetenceWhenCompetenceExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
         Object actual = subject.getCompetencies(ID);
@@ -52,30 +52,34 @@ class CompetenceControllerTest {
     }
 
     @Test
-    void getCompetenciesShouldThrowWhenCompetenciesDoesNotExist() {
+    void getCompetenceShouldThrowWhenCompetenceDoesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenceNotFoundException.class, () -> subject.getCompetencies("1L"));
+        assertThrows(CompetenceNotFoundException.class, () -> {
+            subject.getCompetencies(ID);
+        });
     }
 
     @Test
-    void putCompetenciesShouldSavNewCompetenciesWheCompetenciesExist() throws CompetenceNotFoundException {
+    void putCompetenceShouldSavNewCompetenceWhenCompetenceExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
-        subject.putCompetencies(RECORD_2, "1L");
+        subject.putCompetence(RECORD_2, ID);
 
         verify(mockRepository, times(1)).save(RECORD_2);
     }
 
     @Test
-    void putCompetenciesThrowWhenCompetenciesNotExist() {
+    void putCompetenceThrowWhenCompetenceDoesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenceNotFoundException.class, () -> subject.putCompetencies(RECORD_2, ID));
+        assertThrows(CompetenceNotFoundException.class, () -> {
+            subject.putCompetence(RECORD_2, ID);
+        });
     }
 
     @Test
-    void deleteCompetenciesShouldDeleteCompetenciesFromRepository() {
+    void deleteCompetenceShouldDeleteCompetenceFromRepository() {
         subject.deleteCompetencies(ID);
 
         verify(mockRepository, times(1)).deleteById(ID);
