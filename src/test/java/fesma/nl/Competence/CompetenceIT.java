@@ -114,7 +114,7 @@ public class CompetenceIT {
 
         Thread.sleep(200);
         actual = restTemplate
-                .getForObject(HOST.get() + "/" + EXISTING, Competence.class);
+                .getForObject(HOST.get() + "/"  + EXISTING, Competence.class);
         assertEquals(RECORD_2.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
     }
