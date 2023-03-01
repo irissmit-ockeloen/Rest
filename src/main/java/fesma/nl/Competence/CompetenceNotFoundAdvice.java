@@ -11,7 +11,7 @@ public class CompetenceNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(CompetenceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String CompetenciesNotFoundExceptionHandler(CompetenceNotFoundException ex) {
+    String CompetenceNotFoundExceptionHandler(CompetenceNotFoundException ex) {
         return ex.getMessage();
     }
 }

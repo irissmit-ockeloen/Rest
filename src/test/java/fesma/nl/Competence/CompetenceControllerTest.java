@@ -22,8 +22,8 @@ class CompetenceControllerTest {
 
     String ID = "1L";
 
-    Competence RECORD_1 = new Competence("Python", "Developer");
-    Competence RECORD_2 = new Competence("C++", "Developer");
+    Competence RECORD_1 = new Competence("Java","developer");
+    Competence RECORD_2 = new Competence("C++","developer");
 
     @Test
     void getAllCompetenciesShouldReturnAllCompetencies() {

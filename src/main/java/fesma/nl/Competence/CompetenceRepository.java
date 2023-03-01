@@ -67,9 +67,9 @@ public class CompetenceRepository {
     }
 
     private Competence toCompetence(DocumentSnapshot document) {
-        Competence competence = new Competence();
-                document.getString("competence");
-                document.getString("description");
+        Competence competence = new Competence(
+                document.getString("competence"),
+                document.getString("description"));
        competence.setId(document.getId());
         return competence;
     }

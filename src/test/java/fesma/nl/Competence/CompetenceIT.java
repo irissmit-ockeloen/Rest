@@ -31,12 +31,12 @@ public class CompetenceIT {
 
     String NON_EXISTING = "non-existing";
 
-    Competence RECORD_1 = new Competence("JavaScript", "Developer");
-    Competence RECORD_2 = new Competence( "C++", "Developer");
-
+    Competence RECORD_1 = new Competence("Java", "developer");
+    Competence RECORD_2 = new Competence("C++","developer");
     @Test
     public void testGetAllCompetenceShouldReturn200() {
-        ResponseEntity<String> response = restTemplate.getForEntity(HOST.get(),  String.class);
+        ResponseEntity<String> response = restTemplate.
+                getForEntity(HOST.get(),  String.class);
 
         assertEquals(200, response.getStatusCode().value());
     }
@@ -56,7 +56,6 @@ public class CompetenceIT {
         assertNotNull(actual.getId());
         assertEquals(RECORD_1.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_1.getDescription(), actual.getDescription());
-
         actual = restTemplate
                 .getForObject(HOST.get() + "/" + actual.getId(), Competence.class);
         assertEquals(RECORD_1.getCompetence(), actual.getCompetence());
@@ -115,7 +114,7 @@ public class CompetenceIT {
 
         Thread.sleep(200);
         actual = restTemplate
-                .getForObject(HOST.get() + "/"  + EXISTING, Competence.class);
+                .getForObject(HOST.get() + "/" + EXISTING, Competence.class);
         assertEquals(RECORD_2.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
     }
