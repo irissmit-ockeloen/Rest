@@ -13,7 +13,7 @@ public class CompetenceController {
     }
 
     @GetMapping("/competence")
-    List<Competence> getCompetencies() {
+    List<Competence> getCompetence() {
         return repository.findAll();
     }
     @PostMapping("/competence")
@@ -21,7 +21,7 @@ public class CompetenceController {
         return repository.save(newCompetence);
     }
     @GetMapping("/competence/{id}")
-    Competence getCompetencies(@PathVariable String id) {
+    Competence getCompetence(@PathVariable String id) {
         return repository.findById(id).orElseThrow(() -> new CompetenceNotFoundException(id));
     }
     @PutMapping("/competence/{id}")
@@ -42,7 +42,7 @@ public class CompetenceController {
         throw new CompetenceNotFoundException(id);
     }
     @DeleteMapping("/competence/{id}")
-    void deleteCompetencies(@PathVariable String id){
+    void deleteCompetence(@PathVariable String id){
         repository.deleteById(id);
     }
 }
