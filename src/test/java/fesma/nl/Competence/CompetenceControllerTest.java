@@ -30,7 +30,7 @@ class CompetenceControllerTest {
         List<Competence> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
-        List<Competence> actual = subject.getCompetencies();
+        List<Competence> actual = subject.getCompetence();
 
         assertEquals(expected, actual);
     }
