@@ -9,9 +9,6 @@ class Profile {
     private String function;
     private String description;
 
-    Profile() {
-    }
-
     Profile(String title, String function, String description) {
         this.title = title;
         this.function = function;
@@ -60,7 +57,7 @@ class Profile {
         Profile profile = (Profile) o;
         return
                 Objects.equals(this.id, profile.id) && Objects.equals(this.title, profile.title)
-                && Objects.equals(this.function, profile.function) && Objects.equals(this.description, profile.description);
+                        && Objects.equals(this.function, profile.function) && Objects.equals(this.description, profile.description);
     }
 
     @Override

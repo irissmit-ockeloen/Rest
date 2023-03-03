@@ -14,7 +14,7 @@ public class ProfileController {
     }
 
     @GetMapping("/profiles")
-    List<Profile> getProfiles() {
+    List<Profile> getAllProfiles() {
         return repository.findAll();
     }
 

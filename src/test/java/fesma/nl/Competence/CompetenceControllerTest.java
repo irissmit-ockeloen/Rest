@@ -30,7 +30,7 @@ class CompetenceControllerTest {
         List<Competence> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
-        List<Competence> actual = subject.getCompetence();
+        List<Competence> actual = subject.getAllCompetencies();
 
         assertEquals(expected, actual);
     }
@@ -46,7 +46,7 @@ class CompetenceControllerTest {
     void getCompetenceShouldReturnCompetenceWhenCompetenceExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
-        Object actual = subject.getCompetence(ID);
+        Object actual = subject.getAllCompetencies(ID);
 
         assertEquals(RECORD_1, actual);
     }
@@ -56,7 +56,7 @@ class CompetenceControllerTest {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
         assertThrows(CompetenceNotFoundException.class, () -> {
-            subject.getCompetence(ID);
+            subject.getAllCompetencies(ID);
         });
     }
 

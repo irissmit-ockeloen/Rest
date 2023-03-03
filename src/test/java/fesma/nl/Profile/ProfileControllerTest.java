@@ -28,7 +28,7 @@ public class ProfileControllerTest {
         List<Profile> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
-        List<Profile> actual = subject.getProfiles();
+        List<Profile> actual = subject.getAllProfiles();
 
         assertEquals(expected, actual);
     }

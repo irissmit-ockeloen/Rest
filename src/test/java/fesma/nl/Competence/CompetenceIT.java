@@ -9,140 +9,177 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 
-import java.util.function.Supplier;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 
 @SpringBootTest(classes = CompetenceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CompetenceIT {
-
     @LocalServerPort
     private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
 
-    ObjectMapper MAPPER = new ObjectMapper();
-    Supplier<String> HOST = () -> String.format("http://localhost:%s/competence", port);
-    HttpHeaders HEADERS = new HttpHeaders();
+    static String NON_EXISTING = "non-existing";
+    static Competence RECORD_1 = new Competence("Java", "developer");
+    static Competence RECORD_2 = new Competence("C++", "developer");
 
-    String NON_EXISTING = "non-existing";
-
-    Competence RECORD_1 = new Competence("Java", "developer");
-    Competence RECORD_2 = new Competence("C++","developer");
     @Test
-    public void testGetAllCompetenceShouldReturn200() {
-        ResponseEntity<String> response = restTemplate.
-                getForEntity(HOST.get(),  String.class);
+    public void getAllReturn200() throws JsonProcessingException {
+        int actual = exchangeForStatusCode(url(), GET);
 
-        assertEquals(200, response.getStatusCode().value());
+        assertEquals(200, actual);
     }
 
     @Test
-    public void testPostCompetenceShouldReturn200() {
-       ResponseEntity<String> responseEntity = restTemplate
-                .postForEntity(HOST.get(), RECORD_1, String.class);
+    public void getExistingReturn200() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
 
-        assertEquals(200, responseEntity.getStatusCode().value());
+        int actual = exchangeForStatusCode(url(id), GET);
+
+        assertEquals(200, actual);
     }
+
     @Test
-    public void testPostCompetenceShouldChangeData() {
-        Competence actual = restTemplate
-                .postForObject(HOST.get(), RECORD_1, Competence.class);
+    public void getNonExistingReturn404() throws JsonProcessingException {
+        int actual = exchangeForStatusCode(url(NON_EXISTING), GET);
+
+        assertEquals(404, actual);
+    }
+
+    @Test
+    public void getReturnCorrectObject() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
+
+        Competence actual = exchangeForObject(url(id), GET);
+
+        assertEquals(id, actual.getId());
+        assertEquals(RECORD_1.getCompetence(), actual.getCompetence());
+        assertEquals(RECORD_1.getDescription(), actual.getDescription());
+    }
+
+    @Test
+    public void postReturn200() throws JsonProcessingException {
+        int actual = exchangeForStatusCode(url(), POST, RECORD_1);
+
+        assertEquals(200, actual);
+    }
+
+    @Test
+    public void postReturnCorrectObject() throws JsonProcessingException {
+        Competence actual = exchangeForObject(url(), POST, RECORD_1);
 
         assertNotNull(actual.getId());
         assertEquals(RECORD_1.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_1.getDescription(), actual.getDescription());
-        actual = restTemplate
-                .getForObject(HOST.get() + "/" + actual.getId(), Competence.class);
+    }
+
+    @Test
+    public void postAdaptDatabase() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
+
+        Competence actual = exchangeForObject(url(id), GET);
         assertEquals(RECORD_1.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_1.getDescription(), actual.getDescription());
     }
 
     @Test
-    public void testGetCompetenceShouldReturn200() {
-        String id = postCompetence(RECORD_1);
+    public void putExistingReturn200() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
 
-        ResponseEntity<String> responseEntity = restTemplate
-                .getForEntity(HOST.get() + "/" + id, String.class);
+        int actual = exchangeForStatusCode(url(id), PUT, RECORD_1);
 
-        assertEquals(200, responseEntity.getStatusCode().value());
+        assertEquals(200, actual);
     }
 
     @Test
-    public void testGetNonExistingCompetenceShouldReturn404() {
-        ResponseEntity<String> responseEntity = restTemplate
-                .getForEntity(HOST.get() + "/" + NON_EXISTING, String.class);
+    public void putNonExistingReturn404() throws JsonProcessingException {
+        int actual = exchangeForStatusCode(url(NON_EXISTING), PUT, RECORD_1);
 
-        assertEquals(404, responseEntity.getStatusCode().value());
+        assertEquals(404, actual);
     }
 
     @Test
-    public void testPutCompetenceShouldReturn200() throws JsonProcessingException {
-        String id = postCompetence(RECORD_1);
+    public void putReturnCorrectObject() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                HOST.get() + "/" + id,
-                PUT, getHttpEntity(RECORD_1), String.class);
+        Competence actual = exchangeForObject(url(id), HttpMethod.PUT, RECORD_2);
 
-        assertEquals(200, responseEntity.getStatusCode().value());
-    }
-
-    @Test
-    public void testPutNonExistingCompetenceShouldReturn404() throws JsonProcessingException {
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                HOST.get() + "/" + NON_EXISTING,
-                PUT, getHttpEntity(RECORD_1), String.class);
-
-        assertEquals(404, responseEntity.getStatusCode().value());
-    }
-
-    @Test
-    public void testPutCompetenceShouldChangeData() throws JsonProcessingException, InterruptedException {
-        String EXISTING = postCompetence (RECORD_1);
-
-        Competence actual = restTemplate.exchange(
-                HOST.get() + "/" + EXISTING,
-                HttpMethod.PUT, getHttpEntity(RECORD_2),Competence.class).getBody();
-
-        assertEquals(EXISTING, actual.getId());
+        assertEquals(id, actual.getId());
         assertEquals(RECORD_2.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
+    }
+
+    @Test
+    public void putAdaptDatabase() throws JsonProcessingException, InterruptedException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
+
+        exchangeForObject(url(id), HttpMethod.PUT, RECORD_2);
 
         Thread.sleep(200);
-        actual = restTemplate
-                .getForObject(HOST.get() + "/" + EXISTING, Competence.class);
+        Competence actual = exchangeForObject(url(id), GET);
         assertEquals(RECORD_2.getCompetence(), actual.getCompetence());
         assertEquals(RECORD_2.getDescription(), actual.getDescription());
     }
 
     @Test
-    public void testDeleteCompetenceShouldReturn200() {
-        String id = postCompetence(RECORD_1);
+    public void deleteExistingReturn200() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
 
-        ResponseEntity<String> responseEntity = restTemplate
-                .exchange(HOST.get() + "/" + id, DELETE, getHttpEntity(), String.class);
+        int actual = exchangeForStatusCode(url(id), DELETE);
 
-        assertEquals(200, responseEntity.getStatusCode().value());
+        assertEquals(200, actual);
     }
 
-    private String postCompetence(Competence competence) {
-        Competence actual = restTemplate
-                .postForObject(HOST.get(), competence, Competence.class);
-        return actual.getId();
+    @Test
+    public void deleteAdaptDatabase() throws JsonProcessingException {
+        String id = exchangeForObject(url(), POST, RECORD_1).getId();
+
+        Competence actual = exchangeForObject(url(id), GET);
+        assertEquals(RECORD_1.getCompetence(), actual.getCompetence());
+        assertEquals(RECORD_1.getDescription(), actual.getDescription());
     }
+
+    private String url() {
+        return String.format("http://localhost:%d/competencies", port);
+    }
+
+    private String url(String id) {
+        return String.format("%s/%s", url(), id);
+    }
+
+    private Competence exchangeForObject(String url, HttpMethod method) throws JsonProcessingException {
+        return exchange(url, method, null, Competence.class).getBody();
+    }
+
+    private int exchangeForStatusCode(String url, HttpMethod method) throws JsonProcessingException {
+        ResponseEntity<String> actual = exchange(url, method, null, String.class);
+        return actual.getStatusCode().value();
+    }
+
+    private Competence exchangeForObject(String url, HttpMethod method, Object value) throws JsonProcessingException {
+        return exchange(url, method, value, Competence.class).getBody();
+    }
+
+    private int exchangeForStatusCode(String url, HttpMethod method, Object value) throws JsonProcessingException {
+        ResponseEntity<String> actual = exchange(url, method, value, String.class);
+        return actual.getStatusCode().value();
+    }
+
+    private <T> ResponseEntity<T> exchange(String url, HttpMethod method, Object value, Class<T> responseType) throws JsonProcessingException {
+        return restTemplate.exchange(url, method, getHttpEntity(value), responseType);
+    }
+
     private HttpEntity<String> getHttpEntity(Object value) throws JsonProcessingException {
-        HEADERS.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = MAPPER.writeValueAsString(value);
-        return new HttpEntity<>(requestBody, HEADERS);
-    }
-
-    private HttpEntity<String> getHttpEntity() {
-        HEADERS.setContentType(MediaType.APPLICATION_JSON);
-        return new HttpEntity<>(HEADERS);
+        ObjectMapper mapper = new ObjectMapper();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (value != null) {
+            String requestBody = mapper.writeValueAsString(value);
+            return new HttpEntity<>(requestBody, headers);
+        }
+        return new HttpEntity<>(headers);
     }
 }
 
