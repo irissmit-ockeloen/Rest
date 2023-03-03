@@ -20,3 +20,10 @@ FirebaseOptions options = new FirebaseOptions.Builder()
 
 FirebaseApp.initializeApp(options);
 ```
+
+
+## Deploy
+
+1. `mvn com.microsoft.azure:azure-webapp-maven-plugin:2.5.0:config`
+2. `mvn package azure-webapp:deploy`
+3. 
