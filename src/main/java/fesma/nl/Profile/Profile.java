@@ -9,9 +9,6 @@ class Profile {
     private String function;
     private String description;
 
-    Profile() {
-    }
-
     Profile(String title, String function, String description) {
         this.title = title;
         this.function = function;

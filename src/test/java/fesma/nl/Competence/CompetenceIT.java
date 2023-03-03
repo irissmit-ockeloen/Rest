@@ -26,7 +26,7 @@ public class CompetenceIT {
     private TestRestTemplate restTemplate;
 
     ObjectMapper MAPPER = new ObjectMapper();
-    Supplier<String> HOST = () -> String.format("http://localhost:%s/competence", port);
+    Supplier<String> HOST = () -> String.format("http://localhost:%s/competencies", port);
     HttpHeaders HEADERS = new HttpHeaders();
 
     String NON_EXISTING = "non-existing";

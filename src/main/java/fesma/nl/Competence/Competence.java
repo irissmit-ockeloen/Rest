@@ -7,18 +7,15 @@ class Competence {
     private String description;
     private String id;
 
-     Competence() {
-
-    }
-
-        Competence(String competence, String description) {
+    Competence(String competence, String description) {
         this.competence = competence;
         this.description = description;
     }
 
     public String getId() {
-         return id;
+        return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -49,8 +46,8 @@ class Competence {
             return false;
         Competence competence = (Competence) o;
         return
-        Objects.equals(this.id, competence.id) && Objects.equals(this.competence, competence.competence)
-                && Objects.equals(this.description, competence.description);
+                Objects.equals(this.id, competence.id) && Objects.equals(this.competence, competence.competence)
+                        && Objects.equals(this.description, competence.description);
     }
 
     @Override
