@@ -9,9 +9,6 @@ class Profile {
     private String function;
     private String description;
 
-    Profile() {
-    }
-
     Profile(String title, String function, String description) {
         this.title = title;
         this.function = function;
@@ -52,14 +49,9 @@ class Profile {
 
     @Override
     public boolean equals(Object o) {
-
-        if (this == o)
-            return true;
-        if (!(o instanceof Profile))
-            return false;
-        Profile profile = (Profile) o;
-        return
-                Objects.equals(this.id, profile.id) && Objects.equals(this.title, profile.title)
+        if (this == o) return true;
+        if (!(o instanceof Profile profile)) return false;
+        return Objects.equals(this.id, profile.id) && Objects.equals(this.title, profile.title)
                 && Objects.equals(this.function, profile.function) && Objects.equals(this.description, profile.description);
     }
 

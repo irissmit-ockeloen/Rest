@@ -20,65 +20,67 @@ class CompetenceControllerTest {
     @Autowired
     CompetenceController subject;
 
-    Long ID = 1L;
+    String ID = "1L";
 
-    Competence RECORD_1 = new Competence("Python", "Developer");
-    Competence RECORD_2 = new Competence("C++", "Developer");
-    Competence RECORD_3 = new Competence("JavaScript", "Developer");
-    Competence RECORD_4 = new Competence("Ruby", "Developer");
+    Competence RECORD_1 = new Competence("Java","developer");
+    Competence RECORD_2 = new Competence("C++","developer");
 
     @Test
     void getAllCompetenciesShouldReturnAllCompetencies() {
-        List<Competence> expected = List.of(RECORD_1, RECORD_2, RECORD_3, RECORD_4);
+        List<Competence> expected = List.of(RECORD_1, RECORD_2);
         when(mockRepository.findAll()).thenReturn(expected);
 
-        List<Competence> actual = subject.getAllCompetencies();
+        List<Competence> actual = subject.getCompetencies();
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void postCompetenciesShouldSaveNewCompetenciesToRepository() {
-        subject.postCompetencies(RECORD_1);
+    void postCompetenceShouldSaveNewCompetenceToRepository() {
+        subject.postCompetence(RECORD_1);
 
         verify(mockRepository, times(1)).save(RECORD_1);
     }
 
     @Test
-    void getCompetenciesShouldReturnCompetenciesWhenCompetenciesExist() {
+    void getCompetenceShouldReturnCompetenceWhenCompetenceExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
-        Object actual = subject.getCompetencies(ID);
+        Object actual = subject.getCompetence(ID);
 
         assertEquals(RECORD_1, actual);
     }
 
     @Test
-    void getCompetenciesShouldThrowWhenCompetenciesDoesNotExist() {
+    void getCompetenceShouldThrowWhenCompetenceDoesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenceNotFoundException.class, () -> subject.getCompetencies(ID));
+        assertThrows(CompetenceNotFoundException.class, () -> {
+            subject.getCompetence(ID);
+        });
     }
 
     @Test
-    void putCompetenciesShouldSavNewCompetenciesWheCompetenciesExist() throws CompetenceNotFoundException {
+    void putCompetenceShouldSavNewCompetenceWhenCompetenceExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.of(RECORD_1));
 
-        subject.putCompetencies(RECORD_2, ID);
+        subject.putCompetence(RECORD_2, ID);
 
         verify(mockRepository, times(1)).save(RECORD_2);
     }
 
     @Test
-    void putCompetenciesThrowWhenCompetenciesNotExist() {
+    void putCompetenceThrowWhenCompetenceDoesNotExist() {
         when(mockRepository.findById(ID)).thenReturn(Optional.empty());
 
-        assertThrows(CompetenceNotFoundException.class, () -> subject.putCompetencies(RECORD_2, ID));
+        assertThrows(CompetenceNotFoundException.class, () -> {
+            subject.putCompetence(RECORD_2, ID);
+        });
     }
 
     @Test
-    void deleteCompetenciesShouldDeleteCompetenciesFromRepository() {
-        subject.deleteCompetencies(ID);
+    void deleteCompetenceShouldDeleteCompetenceFromRepository() {
+        subject.deleteCompetence(ID);
 
         verify(mockRepository, times(1)).deleteById(ID);
     }

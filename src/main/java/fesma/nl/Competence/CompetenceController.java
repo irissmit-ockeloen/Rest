@@ -12,29 +12,27 @@ public class CompetenceController {
         this.repository = repository;
     }
 
-    @GetMapping("/competence")
-    List<Competence> getAllCompetencies() {
+    @GetMapping("/competencies")
+    List<Competence> getCompetencies() {
         return repository.findAll();
     }
-    @GetMapping("/competence/{id}")
-    Competence getCompetencies(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow(() -> new CompetenceNotFoundException(id));
-    }
-
-    @PostMapping("/competence")
-    Competence postCompetencies(@RequestBody Competence newCompetence) {
+    @PostMapping("/competencies")
+    Competence postCompetence(@RequestBody Competence newCompetence) {
         return repository.save(newCompetence);
     }
-
-    @PutMapping("/competence/{id}")
-    Competence putCompetencies(@RequestBody Competence newCompetence, @PathVariable Long id) {
+    @GetMapping("/competencies/{id}")
+    Competence getCompetence(@PathVariable String id) {
+        return repository.findById(id).orElseThrow(() -> new CompetenceNotFoundException(id));
+    }
+    @PutMapping("/competencies/{id}")
+    Competence putCompetence(@RequestBody Competence newCompetence, @PathVariable String id) {
         Optional<Competence> result = repository.findById(id);
         if (result.isPresent()) {
-            return result.map(competencies -> {
-                        competencies.setCompetence(newCompetence.getCompetence());
-                        competencies.setDescription(newCompetence.getDescription());
+            return result.map(competence -> {
+                        competence.setCompetence(newCompetence.getCompetence());
+                        competence.setDescription(newCompetence.getDescription());
 
-                        return repository.save(competencies);
+                        return repository.save(competence);
                     })
                     .orElseGet(() -> {
                         newCompetence.setId(id);
@@ -43,9 +41,10 @@ public class CompetenceController {
         }
         throw new CompetenceNotFoundException(id);
     }
-    @DeleteMapping("/competence/{id}")
-    void deleteCompetencies(@PathVariable Long id){
+    @DeleteMapping("/competencies/{id}")
+    void deleteCompetence(@PathVariable String id){
         repository.deleteById(id);
     }
 }
+
 

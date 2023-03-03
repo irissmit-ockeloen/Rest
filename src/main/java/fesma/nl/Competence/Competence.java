@@ -2,20 +2,21 @@ package fesma.nl.Competence;
 
 import java.util.Objects;
 
-public class Competence {
+class Competence {
     private String competence;
     private String description;
-    private Long id;
+    private String id;
 
-    public Competence(String competence, String description) {
+    Competence(String competence, String description) {
         this.competence = competence;
         this.description = description;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -23,7 +24,7 @@ public class Competence {
         return competence;
     }
 
-    public void setCompetence(String title) {
+    public void setCompetence(String competence) {
         this.competence = competence;
     }
 
@@ -38,14 +39,10 @@ public class Competence {
 
     @Override
     public boolean equals(Object o) {
-
-        if (this == o)
-            return true;
-        if (!(o instanceof Competence competence))
-            return false;
-        return
-                Objects.equals(this.id, competence.id) && Objects.equals(this.competence, competence.competence)
-                        && Objects.equals(this.description, competence.description);
+        if (this == o) return true;
+        if (!(o instanceof Competence competence)) return false;
+        return Objects.equals(this.id, competence.id) && Objects.equals(this.competence, competence.competence)
+                && Objects.equals(this.description, competence.description);
     }
 
     @Override
@@ -56,7 +53,7 @@ public class Competence {
 
     @Override
     public String toString() {
-        return "competencies.Competence{" +
+        return "Competence{" +
                 "id=" + this.id + ", competence=" + this.competence + "description=" + this.description + '\'' + '}';
     }
 }
