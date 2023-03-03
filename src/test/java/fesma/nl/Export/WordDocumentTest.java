@@ -3,6 +3,7 @@ package fesma.nl.Export;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 
@@ -11,15 +12,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WordIT {
+public class WordDocumentTest {
     static WordDocument wordDocument;
 
     @BeforeClass
     public static void generateMSWordFile() throws Exception {
-        WordIT.wordDocument = new WordDocument();
+        WordDocumentTest.wordDocument = new WordDocument();
         wordDocument.hashCode();
     }
 
@@ -38,15 +39,11 @@ public class WordIT {
         assertEquals("Courier", titleRun.getFontFamily());
         assertEquals(20, titleRun.getFontSizeAsDouble().intValue());
 
-        assertEquals("from HTTP fundamentals to API Mastery", ((List<?>) paragraphs).get(1).getClass());
-        assertEquals("What makes a good API?", paragraphs.get(3).getText());
-        assertEquals(wordDocument.convertTextFileToString(WordDocument.paragraph1),
-                paragraphs.get(4).getText());
-        assertEquals(wordDocument.convertTextFileToString(WordDocument.paragraph2),
-                paragraphs.get(5).getText());
-        assertEquals(wordDocument.convertTextFileToString(WordDocument.paragraph3),
-                paragraphs.get(6).getText());
-       assertEquals(wordDocument.convertTextFileToString(WordDocument.paragraph4),
-               paragraphs.get(7).getText());
+        Assert.assertEquals("from HTTP fundamentals to API Mastery", paragraphs.get(1).getText());
+        Assert.assertEquals("What makes a good API?", paragraphs.get(3).getText());
+        assertEquals(WordDocument.convertTextFileToString(WordDocument.paragraph1), paragraphs.get(4).getText());
+        assertEquals(WordDocument.convertTextFileToString(WordDocument.paragraph2), paragraphs.get(5).getText());
+        assertEquals(WordDocument.convertTextFileToString(WordDocument.paragraph3), paragraphs.get(6).getText());
+        assertEquals(WordDocument.convertTextFileToString(WordDocument.paragraph4), paragraphs.get(7).getText());
     }
 }
