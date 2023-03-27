@@ -1,5 +1,6 @@
 package fesma.nl.Export;
 
+import fesma.nl.Word_document.WordDocument;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
