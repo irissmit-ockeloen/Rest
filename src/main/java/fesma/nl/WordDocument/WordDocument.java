@@ -1,4 +1,4 @@
-package fesma.nl.Word_document;
+package fesma.nl.WordDocument;
 
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
